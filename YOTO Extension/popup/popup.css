@@ -1,0 +1,14 @@
+#capture_screen {
+    height: 30px;
+    width: 30px;
+    margin: 15px;
+    border: none;
+    border-radius: 2px;
+    background-color: #3aa757;
+}
+
+#capture_screen.hovering {
+    box-shadow: 0 0 0 2px white,
+                0 0 0 4px black;
+}
+

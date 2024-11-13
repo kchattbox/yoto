@@ -1,0 +1,28 @@
+{
+    "name": "YOTO",
+    "version": "0.1",
+    "manifest_version": 3,
+    "description": "I don't know how to describe this yet...",
+    "icons": {
+
+    },
+    "background": {
+        "service_worker": "./background.js"
+    },
+    "permissions": ["storage", "activeTab", "scripting", "tabs"],
+    "host_permissions": ["<all_urls>"],
+    "action": {
+        "default_popup": "./popup/popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"],
+            "css": ["content.css"]
+        }
+    ],
+    "web_accessible_resources": [{
+        "resources": ["html2canvas.min.js", "inject.js", "dom-to-image.min.js"],
+        "matches": ["<all_urls>"]
+    }]
+}

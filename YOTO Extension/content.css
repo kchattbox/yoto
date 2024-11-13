@@ -1,0 +1,20 @@
+#region-selector-container {
+    position: fixed;
+    z-index: 9999999;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    cursor: crosshair;
+    pointer-events: auto;
+}
+
+#region-selector-box {
+    position: fixed;
+    z-index: 999999;
+    box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.50);
+
+    border-style: dashed;
+    border-width: 1px;
+    border-color: white;
+}
