@@ -51,6 +51,24 @@ run = () => {
         return document.querySelector("#region-selector-box");
     }
 
+    // this function returns the current styles of the DOMElement so it can be 
+    // stored and reset later
+    const getDOMStyles = DOMElement => {
+        return DOMElement.getAttribute('style');
+    }
+
+    // this function prevents the user from interacting with DOM while region selector
+    // is running (you should pass the document.body object)
+    const removeUserDOMInteraction = DOMElement => {
+        DOMElement.style.userSelect = "none";
+        DOMElement.style.pointerEvents = "none";
+    }
+
+    
+    const resetUserDOMInteraction = (DOMElement, originalStyles) => {
+        DOMElement.style = originalStyles;
+    }
+
     // this function will be the logic for capturing the screen
     const screenCapture = () => {
 
@@ -70,6 +88,12 @@ run = () => {
         const container = createRegionSelectorContainer();
         document.body.appendChild(container);
 
+        // save the current styles of the DOM so we can edit and reset it
+        const originalDOMStyles = getDOMStyles(document.body);
+
+        // disable user interaction with the DOM
+        removeUserDOMInteraction(document.body);
+
 
         const firstCornerCoordinates = getCoordinates(mousedownEvent);
             
@@ -84,7 +108,7 @@ run = () => {
             updateRegionSelectorBoxEventListenerWrapper = (e) => updateRegionSelectorBox(firstCornerCoordinates, e);
             document.body.addEventListener('mousemove', updateRegionSelectorBoxEventListenerWrapper);
 
-            endRegionSelectorEventListenerWrapper = (e) => endRegionSelector(firstCornerCoordinates, e);
+            endRegionSelectorEventListenerWrapper = (e) => endRegionSelector(firstCornerCoordinates, e, originalDOMStyles);
             document.body.addEventListener('mouseup', endRegionSelectorEventListenerWrapper);
 
     }
@@ -98,7 +122,7 @@ run = () => {
         drawBox(getRegionSelectorBox(), sortTopLeftBottomRightCoordinates(firstCornerCoordinates, secondCornerCoordinates));
     }
 
-    const endRegionSelector = (firstCornerCoordinates, mouseupEvent) => {
+    const endRegionSelector = (firstCornerCoordinates, mouseupEvent, originalDOMStyles) => {
         const secondCornerCoordinates = getCoordinates(mouseupEvent);
 
                 //debug
@@ -107,10 +131,10 @@ run = () => {
                 drawBox(getRegionSelectorBox(), sortTopLeftBottomRightCoordinates(firstCornerCoordinates, secondCornerCoordinates));
                 screenCapture(); // does nothing right now
 
-                cleanUpRegionSelector();
+                cleanUpRegionSelector(originalDOMStyles);
     }
 
-    const cleanUpRegionSelector = () => {
+    const cleanUpRegionSelector = (originalDOMStyles) => {
 
         // remove region selector elements from the DOM
         getRegionSelectorContainer().remove()
@@ -120,6 +144,10 @@ run = () => {
         document.body.removeEventListener('mousemove', updateRegionSelectorBoxEventListenerWrapper);
         document.body.removeEventListener('mouseup', endRegionSelectorEventListenerWrapper);
         
+
+        // reset orignal DOM styles
+        resetUserDOMInteraction(originalDOMStyles);
+
         // debug
         // console.log("removed event listerners");
         // console.log(startRegionSelector);
